@@ -9,8 +9,8 @@
     "lint": "next lint",
     "generate-types": "wagmi generate",
     "prepare": "husky install",
-    "backend": "cd backend && python main.py",
-    "telegram-bot": "cd telegram-bot && python bot.py",
+    "backend": "cd ../backend && uvicorn main:app --reload",
+    "telegram-bot": "cd ../telegram-bot && python bot.py",
     "chain": "anvil",
     "test": "jest",
     "format": "prettier --write ."
