@@ -9,6 +9,7 @@
     "lint": "next lint",
     "generate-types": "wagmi generate",
     "prepare": "husky install",
+    "docker": "cd .. && docker run -p 6379:6379 redis",
     "backend": "cd ../backend && uvicorn main:app --reload",
     "telegram-bot": "cd ../telegram-bot && python bot.py",
     "chain": "anvil",
