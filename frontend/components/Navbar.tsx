@@ -9,20 +9,35 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const [account, setAccount] = useState<string | null>(null);
+  const [showDisconnectModal, setShowDisconnectModal] = useState(false);
 
   const connectWallet = async () => {
-    if (
-      typeof window !== 'undefined' &&
-      window.ethereum &&
-      typeof window.ethereum.request === 'function'
-    ) {
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      setAccount(accounts[0]);
+    if (account) {
+      setShowDisconnectModal(true);
+      return;
+    }
+    if (typeof window !== 'undefined' && window.ethereum?.request) {
+      try {
+        const accounts = await window.ethereum.request({ 
+          method: 'eth_requestAccounts' 
+        });
+        setAccount(accounts[0]);
+      } catch (error) {
+        console.error('Wallet connection failed:', error);
+      }
     } else {
       console.warn('No window.ethereum.request available');
     }
   };
-  console.log(account)
+
+  const disconnectWallet = () => {
+    setAccount(null);
+    setShowDisconnectModal(false);
+  };
+
+  const truncateAddress = (addr: string) => {
+    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+  };
 
   return (
     <nav className="navbar">
@@ -48,10 +63,17 @@ export default function Navbar() {
         </div>
 
         <button 
-          className="connect-wallet"
-          onClick={() => connectWallet()}
+          className={`connect-wallet ${account ? 'connected' : ''}`}
+          onClick={connectWallet}
         >
-          Connect Wallet
+          {account ? (
+            <>
+              <span>{truncateAddress(account)}</span>
+              <span className="disconnect-icon">✕</span>
+            </>
+          ) : (
+            'Connect Wallet'
+          )}
         </button>
 
         <button 
@@ -60,6 +82,27 @@ export default function Navbar() {
         >
           ☰
         </button>
+        {showDisconnectModal && (
+          <div className="disconnect-modal">
+            <div className="modal-content">
+              <p>Disconnect wallet?</p>
+              <div className="modal-actions">
+                <button 
+                  onClick={() => setShowDisconnectModal(false)}
+                  className="modal-cancel"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={disconnectWallet}
+                  className="modal-confirm"
+                >
+                  Disconnect
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <style jsx>{`
@@ -149,6 +192,76 @@ export default function Navbar() {
           cursor: pointer;
         }
 
+        .connect-wallet.connected {
+          background: rgba(255, 255, 255, 0.1);
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.75rem 1.25rem;
+        }
+
+        .disconnect-icon {
+          font-size: 1.2rem;
+          line-height: 1;
+          transition: opacity 0.2s;
+        }
+
+        .connect-wallet.connected:hover .disconnect-icon {
+          opacity: 0.7;
+        }
+
+        .disconnect-modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;                  /* full viewport width */
+          height: 100vh;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+        }
+
+        .modal-content {
+          position: relative;
+          background: white;
+          padding: 2rem;
+          border-radius: 1rem;
+          text-align: center;
+          max-width: 300px;
+          width: 90%;
+        }
+
+        .modal-content p {
+          color: #1e293b;
+          margin-bottom: 1.5rem;
+        }
+
+        .modal-actions {
+          display: flex;
+          gap: 1rem;
+          justify-content: center;
+        }
+
+        .modal-cancel {
+          background: #f1f5f9;
+          color: #64748b;
+          padding: 0.5rem 1.5rem;
+          border-radius: 0.5rem;
+          border: none;
+          cursor: pointer;
+        }
+
+        .modal-confirm {
+          background: #ef4444;
+          color: white;
+          padding: 0.5rem 1.5rem;
+          border-radius: 0.5rem;
+          border: none;
+          cursor: pointer;
+        }
+
         @media (max-width: 768px) {
           .nav-links {
             display: ${isMenuOpen ? 'flex' : 'none'};
@@ -167,6 +280,10 @@ export default function Navbar() {
           }
 
           .connect-wallet {
+            display: none;
+          }
+
+          .connect-wallet.connected {
             display: none;
           }
 
