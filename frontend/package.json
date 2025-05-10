@@ -6,7 +6,14 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-types": "wagmi generate",
+    "prepare": "husky install",
+    "backend": "cd backend && python main.py",
+    "telegram-bot": "cd telegram-bot && python bot.py",
+    "chain": "anvil",
+    "test": "jest",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@balancer-labs/sdk": "^1.1.6",
