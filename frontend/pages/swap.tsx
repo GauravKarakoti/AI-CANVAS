@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { ethers } from 'ethers'
-import '../app/globals.css';
+import '../app/globals.css'
+import Link from 'next/link'
+import Image from 'next/image' // Fixed: Using Next.js Image component
 
-// Declare extended Window interface
+// Declare extended Window interface with proper type
 declare global {
   interface Window {
-    ethereum?: any
+    ethereum?: ethers.providers.ExternalProvider
   }
 }
 
@@ -28,6 +30,7 @@ export default function SwapPage() {
   const [quote, setQuote] = useState<QuoteResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [txHash, setTxHash] = useState<string | null>(null) // Moved useState to top level
 
   const getQuote = async () => {
     setLoading(true)
@@ -60,7 +63,6 @@ export default function SwapPage() {
 
   const executeSwap = async () => {
     if (!quote || !window.ethereum) return
-    const [txHash, setTxHash] = useState<string | null>(null)
     
     try {
       setLoading(true)
@@ -68,6 +70,7 @@ export default function SwapPage() {
       const txResponse = await provider.send('eth_sendTransaction', [quote.tx])
       setTxHash(txResponse.hash)
       const receipt = await txResponse.wait()
+      console.log(txHash, receipt)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Swap failed')
     } finally {
@@ -79,9 +82,15 @@ export default function SwapPage() {
     <div className="swap-container">
       <div className="swap-card">
         <div className="header">
-          <a href='/'>
-            <img src={ZORA_COIN.logoURI} alt={ZORA_COIN.symbol} className="token-logo" />
-          </a>
+          <Link href='/'>
+            <Image 
+              src={ZORA_COIN.logoURI} 
+              alt={ZORA_COIN.symbol} 
+              width={64}
+              height={64}
+              className="token-logo"
+            />
+          </Link>
           <h2>Swap ETH to {ZORA_COIN.symbol}</h2>
         </div>
 
@@ -106,7 +115,7 @@ export default function SwapPage() {
         {quote && (
           <div className="swap-details">
             <div className="price-row">
-              <span>You'll receive</span>
+              <span>You&apos;ll receive</span>
               <div className="price-amount">
                 {ethers.utils.formatUnits(quote.toTokenAmount, ZORA_COIN.decimals)}
                 <span className="token-symbol">{ZORA_COIN.symbol}</span>

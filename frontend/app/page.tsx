@@ -34,7 +34,7 @@ export default function Home() {
           Transform AI Art into Tradable Coins
         </h1>
         <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-          Generate, tokenize, and trade AI-generated artwork in seconds using Zora's Coins Protocol
+          Generate, tokenize, and trade AI-generated artwork in seconds using Zora&apos;s Coins Protocol
         </p>
         <div className="flex gap-4 justify-center">
           <Link href="/mint">

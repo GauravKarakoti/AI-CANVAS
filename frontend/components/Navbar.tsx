@@ -1,31 +1,41 @@
 'use client'
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false); 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const [account, setAccount] = useState<string | null>(null);
 
   const connectWallet = async () => {
-    if (!window.ethereum) return;
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    setAccount(accounts[0]);
+    if (
+      typeof window !== 'undefined' &&
+      window.ethereum &&
+      typeof window.ethereum.request === 'function'
+    ) {
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      setAccount(accounts[0]);
+    } else {
+      console.warn('No window.ethereum.request available');
+    }
   };
+  console.log(account)
 
   return (
     <nav className="navbar">
       <div className="nav-container">
         <Link href="/" className="logo">
           <div className="logo-container">
-            <img 
-              src="/logo.png" 
-              alt="AI CANVAS" 
-              className="token-logo" 
-              width={50} 
-              height={50} 
+            <Image
+              src="/logo.png"                 // same image path
+              alt="AI CANVAS Logo"            // descriptive alt text
+              width={50}                      // explicit width
+              height={50}                     // explicit height
+              priority                        // preload this critical image
+              className="token-logo"
             />
             <span className="gradient-text">AI Canvas</span>
           </div>
