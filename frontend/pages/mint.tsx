@@ -4,6 +4,8 @@ import {
   zoraCreator1155FactoryImplABI,
   zoraCreator1155FactoryImplAddress
 } from "@zoralabs/protocol-deployments"
+import Link from 'next/link';
+import Image from 'next/image';
 
 // Validate environment variable at component level
 if (!process.env.NEXT_PUBLIC_REFERRAL_WALLET) {
@@ -41,6 +43,15 @@ export default function MintPage() {
     <div className="mint-container">
       <div className="mint-card">
         <div className="header">
+          <Link href='/'>
+            <Image 
+              src='/Logo.png'
+              alt='AI CANVAS'
+              width={64}
+              height={64}
+              className="token-logo"
+            />
+          </Link>
           <h2>Create AI Art Coin</h2>
           <p className="description">
             Mint your AI-generated artwork as a ZORA 1155 token
@@ -87,6 +98,15 @@ export default function MintPage() {
 
         .header {
           margin-bottom: 2rem;
+        }
+
+        .token-logo {
+          width: 64px;
+          height: 64px;
+          border-radius: 50%;
+          margin-bottom: 1rem;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          justify-self: center;
         }
 
         h2 {
