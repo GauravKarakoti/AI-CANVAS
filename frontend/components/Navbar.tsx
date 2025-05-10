@@ -30,7 +30,7 @@ export default function Navbar() {
         <Link href="/" className="logo">
           <div className="logo-container">
             <Image
-              src="/logo.png"                 // same image path
+              src="/Logo.png"                 // same image path
               alt="AI CANVAS Logo"            // descriptive alt text
               width={50}                      // explicit width
               height={50}                     // explicit height

@@ -23,7 +23,7 @@ const ZORA_COIN = {
   name: 'AI Art Coin',
   symbol: 'AIART',
   decimals: 18,
-  logoURI: '/logo.png'
+  logoURI: '/Logo.png'
 }
 
 export default function SwapPage() {
