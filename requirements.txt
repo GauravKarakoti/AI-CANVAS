@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+redis
+transformers
+python-telegram-bot
+python-dotenv
+tweepy
